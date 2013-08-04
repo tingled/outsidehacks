@@ -81,6 +81,8 @@ def insert_into_mongo():
   db = get_mongo_db()
   sets_coll = db.sets
   for aset in sets:
+    aset['artist_name_lower'] = aset['artist_name'].lower()
     sets_coll.insert(aset) 
 
-insert_into_mongo()
+if __name__=='__main__':
+  insert_into_mongo()
