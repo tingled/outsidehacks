@@ -1,8 +1,14 @@
 import requests
 import pdb
 import re
+import os
 import json
 import codecs
+from pymongo import MongoClient
+
+def get_mongo_db():
+  client =  MongoClient()
+  return client.outsidehacks
 
 def parse_artists():
   url = 'http://lineup.sfoutsidelands.com/?sort=alpha'
@@ -53,12 +59,28 @@ def parse_day(day):
       match=match[0]
       name = match[0]
       (start,end) = match[1].split(' - ')
-      sets.append((name,str(int(day)),stage,start,end))
+      curd = {'artist_name':name,'start':start,'end':end,'day':day,'stage':stage}
+      sets.append(curd)
   return sets
 
-days = ['09','10','11']
-sets = []
-for day in days:
-  sets+=parse_day(day)
+def parse_festival():
+  data_file = 'set_data.json'
+  if os.path.isfile(data_file):
+    sets = json.load(open(data_file,'r'))
+  else:
+    days = ['09','10','11']
+    sets = []
+    for day in days:
+      sets+=parse_day(day)
 
-json.dump(sets,open('set_data.json','w'))
+    json.dump(sets,open(data_file,'w'))
+  return sets
+
+def insert_into_mongo():
+  sets = parse_festival()
+  db = get_mongo_db()
+  sets_coll = db.sets
+  for aset in sets:
+    sets_coll.insert(aset) 
+
+insert_into_mongo()
