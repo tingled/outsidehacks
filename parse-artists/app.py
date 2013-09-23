@@ -129,7 +129,7 @@ def get_schedule():
         mid_sched = sched
         min_distance = dist
 
-    return jsonify({"setlist":setlist,'distance':schedule_to_distance(setlist),'mid_setlist':mid_sched,'mid_distance':min_distance,'lazy_schedule':lazy_schedule,'lazy_distance':lazy_distance})
+    return jsonify({"setlist":setlist,'distance':schedule_to_distance(setlist),'mid_setlist':mid_sched,'mid_distance':min_distance,'lazy_setlist':lazy_schedule,'lazy_distance':lazy_distance})
 
   #TODO return json
 
